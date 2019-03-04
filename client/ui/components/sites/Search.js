@@ -32,9 +32,6 @@ class Search extends React.Component {
     }
 
     submit = (values, actions) => {
-        //console.log(values);
-        //console.log(this.props.sites);
-        
         let res = "";
         this.props.sites.forEach(site => {
 

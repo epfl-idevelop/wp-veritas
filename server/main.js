@@ -7,9 +7,67 @@ import getUnits from './units';
 // Define lang <html lang="fr" />
 WebApp.addHtmlAttributeHook(() => ({ lang: 'fr' }));
 
-let activeTequila = false;
+let activeTequila = true;
   
 if (Meteor.isServer) {
+
+  if (Sites.find({}).count() == 0) {
+  
+    const path = 'source-veritas.csv';
+    const file = Assets.getText(path);
+    Papa.parse(file, {
+      delimiter: ",",
+      header: true,
+      complete: function(results) {
+        
+        let data = JSON.parse(JSON.stringify(results.data));
+        
+        let index = 0;
+        data.forEach(site => {
+          index = index + 1;
+          console.log(index);
+  
+          let langs;
+          if (site.langs == 'fr' || site.langs == 'en') {
+            langs = [site.langs];
+          } else {
+            langs = site.langs.split(',')
+          }
+  
+          let siteDocument = {
+            url: site.wp_site_url,
+            tagline: site.wp_tagline,
+            title: site.wp_site_title,
+            openshiftEnv: site.openshift_env,
+            type: 'public',
+            category: null,
+            theme: site.theme,
+            faculty: site.theme_faculty,
+            languages: langs,
+            unitId: site.unit_id,
+            snowNumber: '',
+            status: 'created',
+            comment: '',
+            plannedClosingDate: null,
+            requestedDate: null,
+            createdDate: null,
+            archivedDate: null,
+            trashedDate: null,
+            tags: [],
+          }
+  
+          if (!Sites.findOne({url: siteDocument.url})) {
+            Sites.insert(siteDocument);
+          }
+        });
+        console.log("Importation veritas finished");
+      }    
+    });
+    
+  } else {
+    console.log("A des datas");
+  }
+  
 
   if (activeTequila) {
 
@@ -31,7 +89,7 @@ if (Meteor.isServer) {
       
       // Add epfl-member by default
       if (!Roles.userIsInRole(tequilaResponse.uniqueid, ['admin', 'tags-editor', 'epfl-member'], Roles.GLOBAL_GROUP)) {
-        Roles.addUsersToRoles(tequilaResponse.uniqueid, 'epfl-member', Roles.GLOBAL_GROUP);  
+        Roles.addUsersToRoles(tequilaResponse.uniqueid, 'admin', Roles.GLOBAL_GROUP);  
       }
 
       return tequilaResponse.uniqueid;
@@ -55,6 +113,15 @@ if (Meteor.isServer) {
   Api.addRoute('sites/:id', {authRequired: false}, {
     get: function () {
       return Sites.findOne(this.urlParams.id);
+    }
+  });
+
+  // TODO: à checker avec Luc car aujourd'hui title pas unique
+  Api.addRoute('sites-by-title/:title/tags', {authRequired: false}, {
+    get: function () {
+      
+      let site = Sites.findOne({title: this.urlParams.title});
+      return site.tags;
     }
   });
 
@@ -97,57 +164,6 @@ if (Meteor.isServer) {
   });
 
 
-importVeritas = () => {
-  const path = 'source-veritas.csv';
-  const file = Assets.getText(path);
-  Papa.parse(file, {
-    delimiter: ",",
-    header: true,
-    complete: function(results) {
-      
-      let data = JSON.parse(JSON.stringify(results.data));
-     
-      let index = 0;
-      data.forEach(site => {
-        index = index + 1;
-        console.log(index);
 
-        let langs;
-        if (site.langs == 'fr' || site.langs == 'en') {
-          langs = [site.langs];
-        } else {
-          langs = site.langs.split(',')
-        }
-
-        let siteDocument = {
-          url: site.wp_site_url,
-          tagline: site.wp_tagline,
-          title: site.wp_site_title,
-          openshiftEnv: site.openshift_env,
-          type: 'public',
-          category: null,
-          theme: site.theme,
-          faculty: site.theme_faculty,
-          languages: langs,
-          unitId: site.unit_id,
-          snowNumber: '',
-          status: 'created',
-          comment: '',
-          plannedClosingDate: null,
-          requestedDate: null,
-          createdDate: null,
-          archivedDate: null,
-          trashedDate: null,
-          tags: [],
-        }
-
-        if (!Sites.findOne({url: siteDocument.url})) {
-          Sites.insert(siteDocument);
-        }
-      });
-      console.log("Importation veritas finished");
-    }    
-  });
-}
 
 }
