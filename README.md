@@ -8,3 +8,9 @@ This is a wonderful project.
 cd ansible
 ansible-playbook playbook.yml -i hosts-test
 </pre>
+
+
+# Symlink private key from keybase
+```
+ln -s /keybase/team/epfl_wpveritas/private_key.pkcs7.pem ./keys/
+```
