@@ -1,3 +1,5 @@
+const utils = require('./utils');
+
 const addSite = async (page) => {
 
   // Click on /add 
@@ -64,15 +66,22 @@ const deleteSite = async (page) => {
   let deleteButton = await page.$x(xpathDeleteButton);
   
   if (deleteButton.length > 0) {
-    console.log(">0")
-    /*
+
+    console.log(">0");
+    await page.waitFor(1000);
+    await utils.doScreenshot(page, 'click');
     deleteButton[0].click();
-    await popup.waitForSelector('[name="__CONFIRM__"]')
-    const confirm = await popup.$('[name="__CONFIRM__"]')
-    await popup.click('[name="__CONFIRM__"]')
-    await page.waitFor(2000);
-    */
+    await page.waitFor(1000);
     
+    /*
+    await page.on("dialog", (dialog) => {
+      console.log("Dialog is up...");
+      delay(1000);
+      console.log("Accepted...");
+      dialog.accept();
+      delay(1000);
+    });
+    */
   } else {
     throw new Error("Button not found");
   }
