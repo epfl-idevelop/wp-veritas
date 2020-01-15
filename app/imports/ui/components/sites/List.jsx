@@ -106,7 +106,6 @@ class List extends Component {
           "openshiftEnv",
           "type",
           "theme",
-          "faculty",
           "languages",
           "unitId",
           "snowNumber",
