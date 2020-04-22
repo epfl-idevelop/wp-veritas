@@ -240,3 +240,4 @@ export const Themes = new Mongo.Collection('themes');
 export const Tags = new Mongo.Collection('tags');
 export const Professors = new Mongo.Collection('professors');
 export const AppLogs = new Mongo.Collection('AppLogs');
+export const Statistics = new Mongo.Collection('statistics');

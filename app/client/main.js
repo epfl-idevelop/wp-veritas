@@ -7,7 +7,7 @@ import App from '../imports/ui/App';
  
 Meteor.startup(() => {
   render(<App />, document.getElementById('render-target'));
-  Tequila.start();
+  //Tequila.start();
 });
 
 if (Meteor.isDevelopment) {

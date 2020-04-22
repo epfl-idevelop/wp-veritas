@@ -9,12 +9,13 @@ import './indexes';
 // Define lang <html lang="fr" />
 WebApp.addHtmlAttributeHook(() => ({ lang: 'fr' }));
 
-let importDatas = true;
+let importDatas = false;
   
 if (Meteor.isServer) {
-  import './tequila-config';
+  //import './tequila-config';
   import './rest-api';
   import './cron';
+  import './statistics';
 
   // Setting up logs
   new AppLogger();
