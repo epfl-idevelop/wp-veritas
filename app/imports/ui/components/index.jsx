@@ -1,9 +1,9 @@
 export { default as Header } from './header/Header';
 export { Footer } from './footer/Footer';
-export { default as Add } from './sites/Add';
-export { default as List } from './sites/List';
+export { default as AddSite } from './sites/AddSite';
+export { default as ListSite } from './sites/ListSite';
 export { default as Admin } from './admin/Admin';
-export { default as Search } from './sites/Search';
+export { default as SearchSite } from './sites/SearchSite';
 export { default as Tag } from './tags/Tag';
 export { default as SiteTags } from './tags/SiteTags';
 export { default as Log } from './admin/Log';

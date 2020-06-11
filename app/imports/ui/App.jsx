@@ -1,22 +1,21 @@
 import React, { Component } from "react";
-import { withTracker } from "meteor/react-meteor-data";
 import {
   Header,
   Footer,
-  Add,
-  List,
   Admin,
-  Search,
+  SearchSite,
   Tag,
   SiteTags,
   Log,
   Professor,
   SiteProfessors,
 } from "./components";
+import ListSiteContainer from "../ui/containers/ListSiteContainer.jsx";
+import AddSiteContainer from "../ui/containers/AddSiteContainer.jsx";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Loading } from "../ui/components/Messages";
 
-class Apps extends Component {
+class App extends Component {
   getEnvironment() {
     const absoluteUrl = Meteor.absoluteUrl();
     let environment;
@@ -48,10 +47,10 @@ class Apps extends Component {
           <div className="App container">
             {this.getEnvironment() === "PROD" ? null : ribbon}
             <Header />
-            <Route path="/search" component={Search} />
+            <Route path="/search" component={SearchSite} />
             {this.props.currentUserIsAdmin || this.props.currentUserIsEditor ? (
               <React.Fragment>
-                <Route exact path="/" component={List} />
+                <Route exact path="/" component={ListSiteContainer} />
                 <Route path="/tags" component={Tag} />
                 <Route path="/tag/:_id" component={Tag} />
                 <Route path="/site-tags/:_id" component={SiteTags} />
@@ -64,8 +63,8 @@ class Apps extends Component {
             ) : null}
             {this.props.currentUserIsAdmin ? (
               <React.Fragment>
-                <Route path="/add" component={Add} />
-                <Route path="/edit/:_id" component={Add} />
+                <Route path="/add" component={AddSiteContainer} />
+                <Route path="/edit/:_id" component={AddSiteContainer} />
                 <Route exact path="/admin" component={Admin} />
                 <Route path="/admin/log/list" component={Log} />
               </React.Fragment>
@@ -77,24 +76,4 @@ class Apps extends Component {
     }
   }
 }
-export default withTracker(() => {
-  let isAdmin = Roles.userIsInRole(Meteor.userId(), ["admin"], "wp-veritas");
-  let isEditor = Roles.userIsInRole(Meteor.userId(), ["tags-editor"], "wp-veritas");
-  let isRole = isAdmin || isEditor;
-  let isLoading;
-
-  if (isRole) {
-    isLoading = Meteor.user() === undefined;
-    currentUser = Meteor.user();
-  } else {
-    isLoading = false;
-    currentUser = "";
-  }
-
-  return {
-    isLoading: isLoading,
-    currentUser: currentUser,
-    currentUserIsAdmin: isAdmin,
-    currentUserIsEditor: isEditor,
-  };
-})(Apps);
+export default App;
