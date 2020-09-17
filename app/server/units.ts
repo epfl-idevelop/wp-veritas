@@ -1,15 +1,15 @@
 import { HTTP } from 'meteor/http';
 import { Meteor } from 'meteor/meteor'
 
-export default getUnits = (sciper) => {
+const getUnits = (sciper: string): string[] => {
   const url = `https://websrv.epfl.ch/cgi-bin/rwsaccred/getRights?app=wp-veritas&caller=000000&password=${Meteor.settings.accred_password}&persid=${sciper}`;
   
   // Note: si on ne précise pas de fonction de callback en 3ème paramètre
   // HTTP GET est synchrone
   let response = HTTP.get(url, {});
-  let admin_units = response.data.result['WordPress.Admin'];
-  let editor_units = response.data.result['WordPress.Editor'];
-  let units;
+  let admin_units: number[] = response.data.result['WordPress.Admin'];
+  let editor_units: number[] = response.data.result['WordPress.Editor'];
+  let units: number[];
   if (admin_units == undefined && editor_units == undefined) {
     units = [];
   } else if (admin_units == undefined) {
@@ -20,6 +20,10 @@ export default getUnits = (sciper) => {
     units = [...admin_units, ...editor_units];
   }
   // Convert Array of Integer to Array of String
-  units = units.map(String);
-  return units;
+  let result: string[] = units.map(String);
+  return result;
+}
+
+export {
+  getUnits
 }

@@ -1,6 +1,6 @@
 import { Sites } from "../../imports/api/collections";
 import { Api, formatSiteCategories } from "./utils";
-import getUnits from "../units";
+import { getUnits } from "../units";
 
 /**
  * @api {get} /sites  Get all active sites (isDeleted: false)
